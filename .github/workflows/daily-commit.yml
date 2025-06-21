@@ -2,8 +2,8 @@ name: Daily Commit Automation
 
 on:
   schedule:
-    - cron: '05 4 * * *'  # Runs daily at 04:05 UTC
-  workflow_dispatch:     # Also allows manual trigger from UI
+    - cron: '05 4 * * *'  # Runs every day at 04:05 UTC
+  workflow_dispatch:      # Allows manual trigger from Actions tab
 
 jobs:
   daily-commit:
@@ -14,10 +14,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Update with email 24f1002552@ds.study.iitm.ac.in
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           echo "Last updated on $(date)" >> daily-log.txt
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "Pravin Kumar"
+          git config user.email "pravinkumarsp1665@gmail.com"
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
           git add daily-log.txt
           git commit -m "chore: daily update - $(date '+%Y-%m-%d %H:%M')"
-          git push
+          git push origin HEAD
